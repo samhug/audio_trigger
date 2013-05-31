@@ -1,0 +1,3 @@
+[submodule "lib/jack_client"]
+	path = lib/jack_client
+	url = git@git-server:jack_client.git

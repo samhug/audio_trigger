@@ -17,9 +17,15 @@ def options(opt):
 
 def configure(conf):
     conf.load('compiler_cxx')
+    conf.recurse('lib/jack_client')
 
     conf.define('VERSION', VERSION)
     conf.define('APPLICATION_NAME', APPLICATION_NAME)
+
+    conf.define('DEFAULT_THRESHOLD', 0.75)
+    conf.define('DEFAULT_MIDI_NOTE_ACTIVE', 0x16) # Bank 3, Scene 7
+    conf.define('DEFAULT_MIDI_NOTE_INACTIVE', 0x17) # Bank 3, Scene 8
+    
 
     #conf.env.CXXFLAGS = ['-Wall', '-g']
 
@@ -29,6 +35,8 @@ def configure(conf):
 
 
 def build(bld):
+
+    bld.recurse('lib/jack_client')
     
     SOURCES_PATTERN = ['src/**.cc', 'src/ui/**.cc']
     TESTS_PATTERN   = 'src/**/tests/**.cc'
@@ -37,7 +45,7 @@ def build(bld):
     # Compile program
     bld.program(
         source   = bld.path.ant_glob(SOURCES_PATTERN, excl=[TESTS_PATTERN]),
-        includes = '.',
+        includes = '. lib/jack_client/include',
         target   = APPLICATION_NAME,
-        use      = 'GTKMM3'
+        use      = 'GTKMM3 JackClient'
     )
